@@ -1,7 +1,21 @@
 from flask import Flask,render_template, request
+from flask_mail import Mail, Message 
 import datetime
 
-app=Flask(__name__)
+app = Flask(__name__)
+
+app.config.update(dict(
+    DEBUG = True,
+    MAIL_SERVER = 'smtp.gmail.com',
+    MAIL_PORT = 587,
+    MAIL_USE_TLS = True,
+    MAIL_USE_SSL = False,
+    MAIL_USERNAME = 'cabsharebphc@gmail.com',
+    MAIL_PASSWORD = '',
+))
+
+mail = Mail(app)
+ 
 fnames=[]
 dates=[]
 time_slots=[]
@@ -80,5 +94,18 @@ def update():
 
             all_bookings[i]=(booking[0],booking[1],booking[2],int(booking[3])-1,booking[4])
             print(booking[3])
+            sendmail(booking)
         i=i+1
     return render_template('index.html',bookings_list_in_html=all_bookings)
+def sendmail(booking):
+    msg = Message( 
+                    'CabShare | New Seat Request ', 
+                    sender ='cabsharebphc@gmail.com', 
+                    recipients = ["ayaansiddiqui1462@gmail.com"] 
+                ) 
+    msg.body = "Hello,\nThis email is to inform you that a new seat has been requested for your cab. Details are : \n Direction: " +booking[2]+ " \n Date: " + booking[0] + "\n Time slot: " + booking[1] + "\n Remaining available seats= " +booking[3]+"\n Please contact as per your convenience.\n Best Regards,\n The Cabshare Team"
+    mail.send(msg) 
+    return 'Sent'
+
+if __name__ == '__main__': 
+    app.run(debug = True) 
