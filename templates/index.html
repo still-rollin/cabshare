@@ -114,11 +114,21 @@
                 <span class="input-group-text">Direction</span>
                 <select class="form-select" name="direction" aria-label="Direction">
                     <option selected>Towards Airport</option>
-                    <option>Towrads BPHC</option>
+                    <option>Towards BPHC</option>
                 </select>
 
             </div>
+            <div class="input-group mb-2">
+                <span class="input-group-text">No of seats available for sharing</span>
+                <select class="form-select" name="seat" aria-label="seats">
+                    <option selected>1</option>
+                    <option>2</option>
+                </select>
+            </div>
+
+
             <div class="col-8">
+                
                 <button type="submit" class="btn btn-primary">Add Booking</button>
             </div>
         </form>
@@ -127,42 +137,46 @@
 
 
 
-        &nbsp;
+    &nbsp;
 
 
-        <div class="card" style="width: 90%; margin: auto; padding: 2%">
-            <div class="card-header">
-                Existing Bookings
-            </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">available seats</th>
-                        <th scope="col">direction</th>
-                        <th scope="col">departure</th>
-                        <th scope="col">status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for booking in bookings_list_in_html %}
-                    <tr>
-                        <td>{{ booking[1] }}</td>
-                        <td> 2/3</td>
-                        <td>{{ booking[2] }}</td>
-                        <td>{{ booking[3] }}</td>
-                        <td><button type="button" class="btn btn-primary">
-                                Reserve a Seat<span class="badge text-bg-secondary"></span>
-                            </button></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
-
-
-            </a>
+    <div class="card" style="width: 90%; margin: auto; padding: 2%">
+        <div class="card-header">
+            Existing Bookings
         </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">available seats</th>
+                    <th scope="col">direction</th>
+                    <th scope="col">slot</th>
+                    <th scope="col">status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings_list_in_html %}
+                <tr>
+                    <td>{{ booking[0] }}</td>
+                    <td>{{ booking[3] }} </td>
+                    <td>{{ booking[2] }}</td>
+                    <td>{{ booking[1] }}</td>
+                    <td>
+                        <form action="/update">
+                            <input class="form-control" type="hidden" id="fname" name="val" value={{booking[4]}}>
+                            <button type="submit" class="btn btn-primary">Reserve a Seat</button>
+                        </form>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+
+        </a>
+    </div>
 
 </body>
 

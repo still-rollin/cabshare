@@ -8,6 +8,11 @@ time_slots=[]
 directions=[]
 all_bookings=[]
 showall_bookings=[]
+seats=[]
+dic={'id':0}
+def getnewid():
+    dic['id']=dic['id']+1
+    return (dic['id'])
 
 @app.route("/")
 def hello_world():
@@ -34,11 +39,14 @@ def addbooking():
     direction=request.args.get('direction')
     directions.append(direction)
     print(directions)
-    booking=(date,time_slot,direction)
-
+    seat=request.args.get('seat')
+    seats.append(seat)
+  
+    booking=(date,time_slot,direction,seat,getnewid())
+   
+    
     all_bookings.append(booking)
     print(all_bookings)
-
     return render_template('index.html', bookings_list_in_html=all_bookings)
 
 @app.route("/filter")
@@ -50,7 +58,7 @@ def filter():
     direction1=request.args.get('direction')
     print((fname1,date1,slot1,direction1))
     for booking1 in all_bookings:
-        if(booking1==(date1,slot1,direction1)):
+        if(booking1[0]==date1 and booking1[1]==slot1 and booking1[2]==direction1):
             showall_bookings.append(booking1)
     print(showall_bookings)
     return render_template('index.html',bookings_list_in_html=showall_bookings)
@@ -61,5 +69,16 @@ def cabservices():
 @app.route("/about")
 def about():
     return render_template('about.html')
+@app.route("/update")
+def update():
+    id=request.args.get('val')
+    print ("id",id)
+    i=0
+    for booking in all_bookings:
+        print("booking[4]",booking[4])
+        if(int(booking[4])==int(id)):
 
-    
+            all_bookings[i]=(booking[0],booking[1],booking[2],int(booking[3])-1,booking[4])
+            print(booking[3])
+        i=i+1
+    return render_template('index.html',bookings_list_in_html=all_bookings)
