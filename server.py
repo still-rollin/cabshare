@@ -11,7 +11,7 @@ app.config.update(dict(
     MAIL_USE_TLS = True,
     MAIL_USE_SSL = False,
     MAIL_USERNAME = 'cabsharebphc@gmail.com',
-    MAIL_PASSWORD = '',
+    MAIL_PASSWORD = 'lgrzlwrdexnuenge',
 ))
 
 mail = Mail(app)
@@ -28,14 +28,15 @@ def getnewid():
     dic['id']=dic['id']+1
     return (dic['id'])
 
-@app.route("/")
-def hello_world():
-    return render_template('index.html', all_bookings=all_bookings)
+@app.route("/home")
+def home():
+    return render_template('home.html', all_bookings=all_bookings)
 
 @app.route("/book") 
 def random():
     return render_template('book.html') 
-@app.route("/login")
+
+@app.route("/")
 def login():
     return render_template('login.html')
 
@@ -61,7 +62,7 @@ def addbooking():
     
     all_bookings.append(booking)
     print(all_bookings)
-    return render_template('index.html', bookings_list_in_html=all_bookings)
+    return render_template('home.html', bookings_list_in_html=all_bookings)
 
 @app.route("/filter")
 def filter():
@@ -75,7 +76,8 @@ def filter():
         if(booking1[0]==date1 and booking1[1]==slot1 and booking1[2]==direction1):
             showall_bookings.append(booking1)
     print(showall_bookings)
-    return render_template('index.html',bookings_list_in_html=showall_bookings)
+    return render_template('home.html',bookings_list_in_html=showall_bookings)
+
 @app.route("/cabservices")
 def cabservices():
     return render_template('cabservices.html')
@@ -83,7 +85,9 @@ def cabservices():
 @app.route("/about")
 def about():
     return render_template('about.html')
+
 @app.route("/update")
+
 def update():
     id=request.args.get('val')
     print ("id",id)
@@ -96,14 +100,15 @@ def update():
             print(booking[3])
             sendmail(booking)
         i=i+1
-    return render_template('index.html',bookings_list_in_html=all_bookings)
+    return render_template('home.html',bookings_list_in_html=all_bookings)
+
 def sendmail(booking):
     msg = Message( 
                     'CabShare | New Seat Request ', 
                     sender ='cabsharebphc@gmail.com', 
                     recipients = ["ayaansiddiqui1462@gmail.com"] 
                 ) 
-    msg.body = "Hello,\nThis email is to inform you that a new seat has been requested for your cab. Details are : \n Direction: " +booking[2]+ " \n Date: " + booking[0] + "\n Time slot: " + booking[1] + "\n Remaining available seats= " +booking[3]+"\n Please contact as per your convenience.\n Best Regards,\n The Cabshare Team"
+    msg.body = "Hello,\nThis email is to inform you that a new seat has been requested for your cab. Details are : \n Direction: " +booking[2]+ " \n Date: " + str(booking[0]) + "\n Time slot: " + str(booking[1]) + "\n Remaining available seats= " +str(booking[3])+"\n Please contact as per your convenience.\n Best Regards,\n The Cabshare Team"
     mail.send(msg) 
     return 'Sent'
 
